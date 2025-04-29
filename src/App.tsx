@@ -423,7 +423,6 @@ function App() {
   }
 
 
-
   useEffect(() => {
     if (logedInUserEmail === 'Guest') return;
     fetchData();
