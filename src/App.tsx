@@ -474,7 +474,7 @@ function App() {
       </div>
       <div className="down-section">
         {/* login page */}
-        {page_n === 1 && (
+        {page_n === 0 && (
           <div className="form-container">
             <h2>Login</h2>
             <form onSubmit={handleLogin}>
