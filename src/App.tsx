@@ -384,6 +384,7 @@ function App() {
     } else {
       setUser(null);
       console.log('Signed out successfully!');
+      setPageN(0);
     }
   };
 
