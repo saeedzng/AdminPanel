@@ -361,7 +361,7 @@ function App() {
     } else {
       setError(null);
       console.log('Logged in successfully!');
-      setPageN(0);
+      setPageN(1);
     }
   };
 
@@ -492,7 +492,7 @@ function App() {
         )}
 
         {/* Admin Page */}
-        {page_n === 3 && (
+        {page_n === 1 && (
           <div>
             <label>Share_rate = {shareRate}</label><br />
             <label>Master TotalSuply = {MasterTotalSuply}</label><br />
