@@ -478,7 +478,8 @@ const handleLogin = async (e: React.FormEvent) => {
       const { data: userData, error } = await supabase.auth.getUser();
       if (error || !userData?.user || userData.user.email !== "saeed.zng@gmail.com") {
         console.warn("Access denied! Redirecting...");
-        setPageN(0);      }
+        setPageN(0);
+      }
     };
 
     checkAdmin();
@@ -527,7 +528,8 @@ const handleLogin = async (e: React.FormEvent) => {
         )}
 
         {/* Admin Page */}
-        {page_n === 1 && (
+        {page_n === 1 && logedInUserEmail === "saeed.zng@gmail.com" && (
+
           <div>
             <label>Share_rate = {shareRate}</label><br />
             <label>Master TotalSuply = {MasterTotalSuply}</label><br />
