@@ -7,12 +7,19 @@ import { useTonConnectUI } from '@tonconnect/ui-react';
 import WebApp from "@twa-dev/sdk";
 import { Address, beginCell } from "ton-core";
 import { useMasterContract } from "./hooks/useMasterContract"
+import { useNavigate } from 'react-router-dom';
 
 // import { getSenderJettonWalletAddress } from './getwalletaddress';
 
 declare global { interface Window { Telegram: any; } }
 
-function App() {
+
+
+
+
+
+const AdminDashboard = () => {
+
   const [page_n, setPageN] = useState(Number(0));
   const [, setUser] = useState<User | null>(null);
   const [email, setEmail] = useState('');
@@ -353,17 +360,36 @@ function App() {
 
 
 
-  const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
-    if (error) {
-      setError(error.message);
-    } else {
-      setError(null);
-      console.log('Logged in successfully!');
-      setPageN(1);
-    }
-  };
+const handleLogin = async (e: React.FormEvent) => {
+  e.preventDefault();
+
+  // Attempt login
+  const { error } = await supabase.auth.signInWithPassword({ email, password });
+  if (error) {
+    setError(error.message);
+    return;
+  }
+
+  // Fetch logged-in user's details
+  const { data: userData, error: userError } = await supabase.auth.getUser();
+  if (userError || !userData?.user) {
+    console.error('Error fetching user:', userError?.message);
+    return;
+  }
+
+  // Allow login only for the admin email
+  if (userData.user.email !== "saeed.zng@gmail.com") {
+    console.warn('Unauthorized access! Logging out.');
+    await supabase.auth.signOut(); // Force logout
+    setUser(null);
+    setPageN(0);
+    return;
+  }
+
+  console.log('Logged in as Admin!');
+  setPageN(1);
+};
+
 
   const handleSignOut = async () => {
     // Fetch the current session
@@ -448,7 +474,19 @@ function App() {
     }
   };
 
+  const navigate = useNavigate();
 
+  useEffect(() => {
+    const checkAdmin = async () => {
+      const { data: userData, error } = await supabase.auth.getUser();
+      if (error || !userData?.user || userData.user.email !== "saeed.zng@gmail.com") {
+        console.warn("Access denied! Redirecting...");
+        navigate("/"); // Redirect non-admins to the home page
+      }
+    };
+
+    checkAdmin();
+  }, []);
 
   return (
     <div className="wrapper">
@@ -509,4 +547,7 @@ function App() {
     </div>
   );
 };
-export default App;
+
+export default AdminDashboard;
+
+
