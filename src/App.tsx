@@ -7,8 +7,6 @@ import { useTonConnectUI } from '@tonconnect/ui-react';
 import WebApp from "@twa-dev/sdk";
 import { Address, beginCell } from "ton-core";
 import { useMasterContract } from "./hooks/useMasterContract"
-import { useNavigate } from 'react-router-dom';
-
 // import { getSenderJettonWalletAddress } from './getwalletaddress';
 
 declare global { interface Window { Telegram: any; } }
@@ -474,15 +472,13 @@ const handleLogin = async (e: React.FormEvent) => {
     }
   };
 
-  const navigate = useNavigate();
 
   useEffect(() => {
     const checkAdmin = async () => {
       const { data: userData, error } = await supabase.auth.getUser();
       if (error || !userData?.user || userData.user.email !== "saeed.zng@gmail.com") {
         console.warn("Access denied! Redirecting...");
-        navigate("/"); // Redirect non-admins to the home page
-      }
+        setPageN(0);      }
     };
 
     checkAdmin();
